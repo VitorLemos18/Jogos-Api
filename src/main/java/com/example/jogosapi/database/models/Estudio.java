@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 
@@ -29,8 +30,8 @@ public class Estudio {
     @Column(nullable = false, length = 200)
     private String descricao;
 
-    @Column(nullable = false, name = "ano_fundacao")
-    private Integer anoFundacao;
+    @Column(name = "data_fundacao", nullable = false)
+    private LocalDate dataFundacao;
 
 
 
