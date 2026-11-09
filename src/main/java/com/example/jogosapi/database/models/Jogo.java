@@ -18,7 +18,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Jogo {
+public class Jogo extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -38,14 +38,6 @@ public class Jogo {
 
     @Column(name = "data_lancamento", nullable = false)
     private LocalDate dataLancamento;
-
-    @Column(name = "criado_em", updatable = false)
-    private LocalDateTime criadoEm;
-
-    @PrePersist
-    public void prePersist() {
-        this.criadoEm = LocalDateTime.now();
-    }
 
     @ManyToOne
     @JoinColumn(name = "estudio_id", nullable = false)

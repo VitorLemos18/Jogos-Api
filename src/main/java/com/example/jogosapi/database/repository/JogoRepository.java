@@ -9,4 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface JogoRepository extends JpaRepository<Jogo, UUID> {
+    boolean existsByTitulo(String titulo);
 }
