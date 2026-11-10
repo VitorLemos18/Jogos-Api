@@ -1,27 +1,32 @@
-🎮 Aokrys GameStore API — Documentação do Projeto
-💡 A Ideia da API
+# 🎮 Aokrys GameStore API
 
-A Aokrys GameStore API é uma API RESTful projetada para servir como o núcleo de backend de uma plataforma de jogos. Seu foco é organizar e disponibilizar de forma estruturada as relações entre Jogos, Estúdios/Empresas Desenvolvedoras e Categorias/Gêneros:
+> API RESTful desenvolvida com **Java 21** e **Spring Boot** para o ecossistema de catálogo de jogos, conectando títulos, estúdios desenvolvedores/publishers e categorias.
 
-Gestão de Empresas (Estúdios/Publishers): Cadastro e consulta de estúdios com histórico, data de fundação e a capacidade de listar o portfólio completo de jogos pertencentes a cada empresa.
-Classificação por Categorias: Categorização flexível dos jogos (um jogo pode pertencer a múltiplos gêneros como RPG, Ação, Indie).
-Catálogo e Consulta: Endpoints para listagem, filtros combinados (jogos por empresa, jogos por categoria) e consulta detalhada de preços e estoque.
-Controle de Usuários e Segurança: Gerenciamento de acessos de clientes e administradores com autenticação segura.
-🛠️ Tecnologias Utilizadas na API
-Linguagem: Java 21
-Framework: Spring Boot
-Spring Data JPA / Hibernate: Mapeamento objeto-relacional (ORM) e consultas ao banco.
-Spring Web (MVC): Criação dos controladores REST e manipulação de requisições/respostas HTTP.
-Spring Security: Camada de autenticação e controle de permissões por roles (ADMIN, USER).
-Bean Validation (Jakarta Validation): Validação dos dados recebidos nos DTOs.
-Banco de Dados & Migrações:
-PostgreSQL
-: Banco de dados relacional.
-Flyway
-: Versionamento e execução automatizada de scripts SQL de migração (db/migration).
-Documentação Interativa:
-SpringDoc OpenAPI / Swagger UI
-: Interface gráfica para testar e documentar os endpoints diretamente no navegador (/swagger-ui.html).
-Utilitários:
-Lombok
-: Redução de código boilerplate (@Getter, @Setter, construtores).
+---
+
+## 💡 A Ideia da API
+
+A **Aokrys GameStore API** é o núcleo de backend para uma plataforma de catálogo e venda de jogos digitais. Diferente de lojas convencionais que exibem apenas listas soltas de produtos, a API foi desenhada para estruturar a descoberta de títulos através do **ecossistema de criadores e gêneros**:
+
+- **🏢 Estúdios e Produtoras:** Centraliza informações de cada empresa (data de fundação, histórico, portfólio completo de jogos desenvolvidos ou publicados).
+- **🏷️ Categorias e Gêneros:** Organização modular para classificação dos jogos (um título pode abranger múltiplos gêneros, como RPG, Ação, Aventura e Indie).
+- **🎯 Catálogo de Jogos:** Gestão completa dos títulos com controle de preço, estoque, data de lançamento e vínculo obrigatório com o estúdio produtor.
+- **🛡️ Auditoria e Soft Delete:** Todas as entidades herdam campos de auditoria (`create_at`, `update_at`, `create_by`, `update_by`) e suporte a exclusão lógica via `deleted_at`.
+- **👤 Controle de Usuários e Permissões:** Perfis distintos (`ADMIN`, `USER`) com regras de segurança para proteger rotas administrativas.
+
+---
+
+## 🛠️ Tecnologias Utilizadas
+
+| Tecnologia | Descrição |
+| :--- | :--- |
+| **Java 21** | Versão LTS moderna com alta performance e novos recursos da linguagem. |
+| **Spring Boot** | Framework base para produtividade e arquitetura corporativa. |
+| **Spring Data JPA / Hibernate** | Abstração da camada de persistência e mapeamento objeto-relacional. |
+| **PostgreSQL** | Banco de dados relacional robusto para integridade das relações. |
+| **Flyway Migration** | Controle e versionamento automatizado do esquema de banco de dados (`db/migration`). |
+| **SpringDoc OpenAPI (Swagger UI)** | Documentação viva e interativa dos endpoints REST. |
+| **Spring Security** | Autenticação, autorização e controle de acessos por roles. |
+| **Jakarta Bean Validation** | Validações declarativas nos DTOs (`@NotBlank`, `@NotNull`, `@Positive`). |
+| **Lombok** | Produtividade no código eliminando getters, setters e construtores repetitivos. |
+| **Maven Wrapper (`mvnw`)** | Gerenciador de dependências e build integrado. |
