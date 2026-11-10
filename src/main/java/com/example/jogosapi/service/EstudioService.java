@@ -22,7 +22,7 @@ public class EstudioService {
     public EstudioResponseDto cadastrar(EstudioDto estudioDto) {
         boolean estudioExiste = estudioRepository.existsByNome(estudioDto.nome());
         if (estudioExiste) {
-            throw new RuntimeException("Estudio não encontrado com esse nome" + estudioDto.nome());
+            throw new RuntimeException("Estudio já cadastrado com esse nome: " + estudioDto.nome());
         }
 
         Estudio estudio = new Estudio();

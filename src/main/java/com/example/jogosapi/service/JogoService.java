@@ -28,7 +28,7 @@ public class JogoService {
 
         boolean jogoExiste = jogoRepository.existsByTitulo(jogoDto.titulo());
         if (jogoExiste) {
-            throw new RuntimeException("Jogo não encontrado com o nome " + jogoDto.titulo());
+            throw new RuntimeException("Jogo já cadastrado com esse nome: " + jogoDto.titulo());
         }
 
         Jogo jogo = new Jogo();
