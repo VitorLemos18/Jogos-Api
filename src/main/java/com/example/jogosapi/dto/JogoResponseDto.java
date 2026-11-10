@@ -14,7 +14,8 @@ public record JogoResponseDto(
         String descricao,
         Integer quantidade,
         BigDecimal preco,
-        LocalDate dataLancamento
+        LocalDate dataLancamento,
+        EstudioResponseDto estudio
 ) {
     public JogoResponseDto(Jogo jogo){
         this(
@@ -23,7 +24,8 @@ public record JogoResponseDto(
                 jogo.getDescricao(),
                 jogo.getQuantidade(),
                 jogo.getPreco(),
-                jogo.getDataLancamento()
+                jogo.getDataLancamento(),
+                new EstudioResponseDto(jogo.getEstudio())
 
         );
     }

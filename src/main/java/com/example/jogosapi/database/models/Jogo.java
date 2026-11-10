@@ -25,7 +25,7 @@ public class Jogo extends BaseEntity {
     private UUID id;
 
     @Column(nullable = false, length = 50)
-    private String titulo;
+    private String titulo   ;
 
     @Column(columnDefinition = "TEXT")
     private String descricao;

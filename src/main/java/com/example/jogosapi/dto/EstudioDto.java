@@ -17,7 +17,7 @@ public record EstudioDto(
 
         @NotNull(message = "A data da criação do Estudio é obrigatoria")
         @PastOrPresent(message = "A data da criação do Estudio não pode ser futura ")
-        LocalDate dataLancamento
+        LocalDate dataFundacao
 
 
 ) {

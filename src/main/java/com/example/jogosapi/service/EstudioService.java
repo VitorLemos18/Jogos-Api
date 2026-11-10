@@ -28,7 +28,7 @@ public class EstudioService {
         Estudio estudio = new Estudio();
         estudio.setNome(estudioDto.nome());
         estudio.setDescricao(estudioDto.descricao());
-        estudio.setDataFundacao(estudioDto.dataLancamento());
+        estudio.setDataFundacao(estudioDto.dataFundacao());
 
         Estudio estudioSalvo = estudioRepository.save(estudio);
 
