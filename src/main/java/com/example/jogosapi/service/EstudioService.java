@@ -18,6 +18,14 @@ public class EstudioService {
 
     private final EstudioRepository estudioRepository;
 
+    @Transactional(readOnly = true)
+    public EstudioResponseDto buscarPorId(UUID id){
+        Estudio estudio = estudioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Estudio não encontrado com esse ID: " + id));
+
+        return new EstudioResponseDto(estudio);
+    }
+
     @Transactional()
     public EstudioResponseDto cadastrar(EstudioDto estudioDto) {
         boolean estudioExiste = estudioRepository.existsByNome(estudioDto.nome());
@@ -35,6 +43,24 @@ public class EstudioService {
         return new EstudioResponseDto(estudioSalvo);
     }
 
+    @Transactional
+    public EstudioResponseDto atualizar(UUID id,EstudioDto estudioDto) {
+        Estudio estudio = estudioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Estúdio não encontrado com o ID:" + id));
+
+        if (!estudio.getNome().equalsIgnoreCase(estudioDto.nome())
+                && estudioRepository.existsByNome(estudioDto.nome())) {
+
+            throw new RuntimeException("Já existe outro estúdio cadastrado com o nome: " + estudioDto.nome());
+        }
+        estudio.setNome(estudioDto.nome());
+        estudio.setDescricao(estudioDto.descricao());
+        estudio.setDataFundacao(estudioDto.dataFundacao());
+        estudioRepository.save(estudio);
+        return new EstudioResponseDto(estudio);
+
+    }
+
     @Transactional(readOnly = true)
     public List<EstudioResponseDto> listarTodosEstudios(){
         return estudioRepository.findAll()
@@ -42,5 +68,17 @@ public class EstudioService {
                 .map(EstudioResponseDto::new)
                 .toList();
     }
+
+
+    @Transactional
+    public void remover(UUID id){
+        Estudio estudio = estudioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Estudio não encontrado com o ID:" + id));
+        estudio.SoftDelete();
+        estudioRepository.save(estudio);
+
+
+    }
+
 
 }

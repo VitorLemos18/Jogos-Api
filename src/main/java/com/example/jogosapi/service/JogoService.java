@@ -43,11 +43,47 @@ public class JogoService {
 
         return new JogoResponseDto(jogoSalvo);
     }
+
     @Transactional(readOnly = true)
     public List<JogoResponseDto> listarTodosJogos(){
         return jogoRepository.findAll()
                 .stream()
                 .map(JogoResponseDto::new)
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public JogoResponseDto buscarJogoPorId(UUID id){
+        Jogo jogo = jogoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Jogo não encontrado com o ID: " + id));
+        return new JogoResponseDto(jogo);
+    }
+
+    @Transactional
+    public JogoResponseDto atualizar(UUID id,  JogoDto jogoDto) {
+        Jogo jogo = jogoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Jogo não encontrado com o ID: " + id));
+
+        if(!jogo.getTitulo().equals(jogoDto.titulo())
+            && jogoRepository.existsByTitulo(jogoDto.titulo())) {
+
+            throw new RuntimeException("Já existe outro jogo com esse nome: " + jogoDto.titulo());
+        }
+
+        jogo.setTitulo(jogoDto.titulo());
+        jogo.setDescricao(jogoDto.descricao());
+        jogo.setQuantidade(jogoDto.quantidade());
+        jogo.setPreco(jogoDto.preco());
+        jogo.setDataLancamento(jogoDto.dataLancamento());
+        jogoRepository.save(jogo);
+        return new JogoResponseDto(jogo);
+    }
+
+    @Transactional
+    public void remover(UUID id){
+        Jogo jogo = jogoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Jogo não encontrado com o ID: " + id));
+        jogo.SoftDelete();
+        jogoRepository.delete(jogo);
     }
 }

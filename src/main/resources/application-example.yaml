@@ -17,3 +17,8 @@ spring:
 
   flyway:
     enabled: true
+
+api:
+  security:
+    token:
+      secret: minha-chave-secreta-123
