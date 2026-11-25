@@ -8,6 +8,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.propertyeditors.UUIDEditor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,9 +34,10 @@ public class EstudioController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EstudioResponseDto>> listarTodosEstudios(){
-        List<EstudioResponseDto> lista = estudioService.listarTodosEstudios();
-        return ResponseEntity.status(HttpStatus.OK).body(lista);
+    public ResponseEntity<Page<EstudioResponseDto>> buscarTodosEstudios(@PageableDefault(size =  10, sort = "nome",
+            direction = Sort.Direction.ASC) Pageable paginacao){
+        Page<EstudioResponseDto> pagina = estudioService.listarTodosOsEstudios(paginacao);
+        return ResponseEntity.status(HttpStatus.OK).body(pagina);
     }
 
     @GetMapping("/{id}")

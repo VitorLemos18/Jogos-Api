@@ -6,11 +6,15 @@ import com.example.jogosapi.service.JogoService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 
@@ -31,14 +35,32 @@ public class JogoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<JogoResponseDto>> listarTodosJogos(){
-        List<JogoResponseDto> lista =  jogoService.listarTodosJogos();
-        return ResponseEntity.status(HttpStatus.OK).body(lista);
+    public ResponseEntity<Page<JogoResponseDto>> listarTodosJogos(
+            @PageableDefault(size = 10, sort = "titulo", direction = Sort.Direction.ASC)Pageable paginacao
+            ){
+        Page<JogoResponseDto> pagina = jogoService.listarTodosOsJogos(paginacao);
+        return ResponseEntity.status(HttpStatus.OK).body(pagina);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<JogoResponseDto> buscarPorId(@PathVariable UUID id){
         return ResponseEntity.status(HttpStatus.OK).body(jogoService.buscarJogoPorId(id));
+    }
+
+    @GetMapping("/estudio/{estudioId}")
+    public ResponseEntity<Page<JogoResponseDto>> buscarPorEstudio(@PathVariable UUID estudioId, @PageableDefault(size = 10,
+            sort = "titulo", direction = Sort.Direction.ASC)Pageable paginacao){
+        Page<JogoResponseDto> jogos = jogoService.buscarPorEstudioId(estudioId, paginacao);
+        return ResponseEntity.status(HttpStatus.OK).body(jogos);
+    }
+
+    @GetMapping("/busca")
+    public ResponseEntity<Page<JogoResponseDto>> buscarPorTitulo(
+            @RequestParam String titulo,
+            @PageableDefault(size = 10, sort = "titulo", direction = Sort.Direction.ASC)Pageable paginacao
+    ){
+        Page<JogoResponseDto> jogos = jogoService.buscarPorTitulo(titulo, paginacao);
+        return ResponseEntity.status(HttpStatus.OK).body(jogos);
     }
 
     @PutMapping("/{id}")

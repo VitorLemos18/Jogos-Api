@@ -7,12 +7,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
 
 @Entity
+@SQLRestriction("deleted_at IS NULL")
 @Table(name = "estudio")
 @Getter
 @Setter

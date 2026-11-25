@@ -5,11 +5,13 @@ import com.example.jogosapi.database.models.Estudio;
 import com.example.jogosapi.database.repository.EstudioRepository;
 import com.example.jogosapi.dto.EstudioDto;
 import com.example.jogosapi.dto.EstudioResponseDto;
+import com.example.jogosapi.exceptions.RecursoNaoEncontradoException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -46,7 +48,8 @@ public class EstudioService {
     @Transactional
     public EstudioResponseDto atualizar(UUID id,EstudioDto estudioDto) {
         Estudio estudio = estudioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Estúdio não encontrado com o ID:" + id));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Estúdio não encontrado com o ID:" + id));
+
 
         if (!estudio.getNome().equalsIgnoreCase(estudioDto.nome())
                 && estudioRepository.existsByNome(estudioDto.nome())) {
@@ -62,18 +65,15 @@ public class EstudioService {
     }
 
     @Transactional(readOnly = true)
-    public List<EstudioResponseDto> listarTodosEstudios(){
-        return estudioRepository.findAll()
-                .stream()
-                .map(EstudioResponseDto::new)
-                .toList();
+    public Page<EstudioResponseDto> listarTodosOsEstudios(Pageable pageable) {
+        return estudioRepository.findAll(pageable).map(EstudioResponseDto::new);
     }
 
 
     @Transactional
     public void remover(UUID id){
         Estudio estudio = estudioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Estudio não encontrado com o ID:" + id));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Estudio não encontrado com o ID:" + id));
         estudio.SoftDelete();
         estudioRepository.save(estudio);
 

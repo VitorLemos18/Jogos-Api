@@ -7,6 +7,9 @@ import com.example.jogosapi.database.repository.EstudioRepository;
 import com.example.jogosapi.database.repository.JogoRepository;
 import com.example.jogosapi.dto.JogoDto;
 import com.example.jogosapi.dto.JogoResponseDto;
+import com.example.jogosapi.exceptions.RecursoNaoEncontradoException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +27,7 @@ public class JogoService {
     @Transactional
     public JogoResponseDto cadastrar(JogoDto jogoDto, UUID estudioId) {
         Estudio estudio = estudioRepository.findById(estudioId)
-                .orElseThrow(() -> new RuntimeException("Estudio Não encontrado com o ID: " + estudioId));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Estudio Não encontrado com o ID: " + estudioId));
 
         boolean jogoExiste = jogoRepository.existsByTitulo(jogoDto.titulo());
         if (jogoExiste) {
@@ -45,17 +48,14 @@ public class JogoService {
     }
 
     @Transactional(readOnly = true)
-    public List<JogoResponseDto> listarTodosJogos(){
-        return jogoRepository.findAll()
-                .stream()
-                .map(JogoResponseDto::new)
-                .toList();
+    public Page<JogoResponseDto> listarTodosOsJogos(Pageable pageable) {
+        return jogoRepository.findAll(pageable).map(JogoResponseDto::new);
     }
 
     @Transactional(readOnly = true)
     public JogoResponseDto buscarJogoPorId(UUID id){
         Jogo jogo = jogoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Jogo não encontrado com o ID: " + id));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Jogo não encontrado com o ID: " + id));
         return new JogoResponseDto(jogo);
     }
 
@@ -82,8 +82,21 @@ public class JogoService {
     @Transactional
     public void remover(UUID id){
         Jogo jogo = jogoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Jogo não encontrado com o ID: " + id));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Jogo não encontrado com o ID: " + id));
         jogo.SoftDelete();
         jogoRepository.delete(jogo);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<JogoResponseDto> buscarPorTitulo(String titulo, Pageable paginacao) {
+        return jogoRepository.findByTituloContainingIgnoreCase(titulo, paginacao).map(JogoResponseDto::new);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<JogoResponseDto> buscarPorEstudioId(UUID id, Pageable paginacao) {
+        if(!estudioRepository.existsById(id)) {
+            throw new RecursoNaoEncontradoException("Estudio não econtrado com esse id: " + id);
+        }
+        return jogoRepository.findByEstudioId(id,paginacao).map(JogoResponseDto::new);
     }
 }
