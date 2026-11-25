@@ -26,7 +26,60 @@ A **Aokrys GameStore API** é o núcleo de backend para uma plataforma de catál
 | **PostgreSQL** | Banco de dados relacional robusto para integridade das relações. |
 | **Flyway Migration** | Controle e versionamento automatizado do esquema de banco de dados (`db/migration`). |
 | **SpringDoc OpenAPI (Swagger UI)** | Documentação viva e interativa dos endpoints REST. |
-| **Spring Security** | Autenticação, autorização e controle de acessos por roles. |
+| **Spring Security** | Autenticação, autorização e controle de acessos por roles (`ADMIN` / `USER`). |
+| **Auth0 Java JWT** | Geração e validação de tokens JWT para autenticação *stateless*. |
+| **Docker & Docker Compose** | Containerização da API e do PostgreSQL para execução padronizada. |
 | **Jakarta Bean Validation** | Validações declarativas nos DTOs (`@NotBlank`, `@NotNull`, `@Positive`). |
 | **Lombok** | Produtividade no código eliminando getters, setters e construtores repetitivos. |
 | **Maven Wrapper (`mvnw`)** | Gerenciador de dependências e build integrado. |
+
+---
+
+## 🚀 Como Rodar com Docker (Recomendado)
+
+A forma mais rápida de subir a API + PostgreSQL sem precisar instalar Java, Maven ou banco de dados localmente:
+
+1. Certifique-se de ter o **Docker** (ou Docker Desktop) instalado e rodando.
+2. Clone o repositório e entre na pasta do projeto:
+   ```bash
+   git clone <url-do-repositorio>
+   cd jogosapi
+   ```
+3. Suba os containers:
+   ```bash
+   docker compose up --build
+   ```
+4. A API estará disponível em `http://localhost:8080` e o Flyway criará automaticamente todas as tabelas (`V1` a `V6`).
+5. Para encerrar os containers:
+   ```bash
+   docker compose down
+   ```
+
+---
+
+## 📖 Documentação e Testes (Swagger UI)
+
+Com a aplicação rodando, acesse no navegador:
+👉 **`http://localhost:8080/swagger-ui.html`**
+
+### 🔐 Credenciais do Administrador Padrão
+Para testar rotas administrativas (como cadastrar estúdios, jogos ou listar todas as vendas), a migration `V6` já cria automaticamente um usuário `ADMIN`:
+
+* **Email:** `admin@aokrys.com`
+* **Senha:** `admin123`
+
+**Como autenticar no Swagger:**
+1. Execute o endpoint **`POST /auth/login`** com as credenciais acima (ou crie uma conta comum em **`POST /usuarios`**).
+2. Copie o `token` retornado.
+3. Clique no botão **Authorize** (cadeado) no topo do Swagger, cole o token e confirme.
+
+---
+
+## 💻 Como Rodar Localmente (Sem Docker)
+
+1. Copie o arquivo `src/main/resources/application-example.yaml` para `src/main/resources/application.yaml`.
+2. Preencha `spring.datasource.url`, `username`, `password` com os dados do seu PostgreSQL local e defina uma chave em `api.security.token.secret`.
+3. Execute pelo IntelliJ ou via terminal:
+   ```bash
+   ./mvnw spring-boot:run
+   ```
